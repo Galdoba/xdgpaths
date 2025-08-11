@@ -132,3 +132,15 @@ func (p *ProgramPaths) BackupsDir() string {
 func (p *ProgramPaths) RuntimeDir() string {
 	return filepath.Join(p.runtimeDir(), p.programName)
 }
+
+//стандартные пути к файлам
+
+// ConfigFile - возвращат стандартный путь конфига
+func (p *ProgramPaths) ConfigFile() string {
+	return filepath.Join(p.ConfigDir(), p.programName+".conf")
+}
+
+// LogFile  - возвращает стандартный путь логфайла
+func (p *ProgramPaths) LogFile() string {
+	return filepath.Join(p.LogDir(), p.programName+".log")
+}
