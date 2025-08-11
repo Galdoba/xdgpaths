@@ -1,9 +1,9 @@
 package xdgpaths
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 )
 
 type ProgramPaths struct {
@@ -17,38 +17,34 @@ func New(programName string) *ProgramPaths {
 // Базовые функции для получения корневых директорий XDG
 
 func (p *ProgramPaths) configHome() string {
-	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
-		return dir
-	}
-	return filepath.Join(os.Getenv("HOME"), ".config")
+	return filepath.Join(home(), ".config")
 }
 
 func (p *ProgramPaths) dataHome() string {
-	if dir := os.Getenv("XDG_DATA_HOME"); dir != "" {
-		return dir
-	}
-	return filepath.Join(os.Getenv("HOME"), ".local", "share")
+	return filepath.Join(home(), ".local", "share")
 }
 
 func (p *ProgramPaths) cacheHome() string {
-	if dir := os.Getenv("XDG_CACHE_HOME"); dir != "" {
-		return dir
-	}
-	return filepath.Join(os.Getenv("HOME"), ".cache")
+	return filepath.Join(home(), ".cache")
 }
 
 func (p *ProgramPaths) stateHome() string {
-	if dir := os.Getenv("XDG_STATE_HOME"); dir != "" {
-		return dir
-	}
-	return filepath.Join(os.Getenv("HOME"), ".local", "state")
+	return filepath.Join(home(), ".local", "state")
 }
 
-func (p *ProgramPaths) runtimeDir() string {
-	if dir := os.Getenv("XDG_RUNTIME_DIR"); dir != "" {
-		return dir
+// func (p *ProgramPaths) runtimeDir() string {
+// 	if dir := os.Getenv("XDG_RUNTIME_DIR"); dir != "" {
+// 		return dir
+// 	}
+// 	return filepath.Join("/run/user", strconv.Itoa(os.Getuid()))
+// }
+
+func home() string {
+	h, err := os.UserHomeDir()
+	if err != nil {
+		panic(fmt.Sprintf("home not found: %v", err))
 	}
-	return filepath.Join("/run/user", strconv.Itoa(os.Getuid()))
+	return h
 }
 
 // Основные пути приложения
@@ -129,9 +125,9 @@ func (p *ProgramPaths) BackupsDir() string {
 
 // RuntimeDir возвращает путь для временных файлов сессии
 // Пример: /run/user/1000/myapp
-func (p *ProgramPaths) RuntimeDir() string {
-	return filepath.Join(p.runtimeDir(), p.programName)
-}
+// func (p *ProgramPaths) RuntimeDir() string {
+// 	return filepath.Join(p.runtimeDir(), p.programName)
+// }
 
 //стандартные пути к файлам
 
